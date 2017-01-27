@@ -98,10 +98,8 @@ function update(state, updates) {
       return applyUpdate(u, s);
     }
 
-    for (var k in s) {
-      if (k in u) {
-        s[k] = update(s[k], u[k]);
-      }
+    for (var k in u) {
+      s[k] = update(s[k], u[k]);
     }
 
     return s;
