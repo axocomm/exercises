@@ -68,6 +68,14 @@ function update(state, updates) {
     if (isCommand(u)) {
       return applyUpdate(u, s);
     }
+
+    for (var k in s) {
+      if (k in u) {
+        s[k] = update(s[k], u[k]);
+      }
+    }
+
+    return s;
   };
 
   return helper(state, updates);
