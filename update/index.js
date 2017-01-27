@@ -28,6 +28,10 @@ var Commands = {
       acc[k] = obj[k];
       return acc;
     }, this);
+  },
+
+  $apply: function (fn) {
+    return fn(this);
   }
 };
 
