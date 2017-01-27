@@ -12,11 +12,8 @@ var Commands = {
   $splice: function (args) {
     var tmp = clone(this);
     for (var i in args) {
-      var arg = args[i],
-          start = arg[0],
-          deleteCount = arg[1],
-          item = arg[2];
-      tmp.splice(start, deleteCount, item);
+      var arg = args[i];
+      Array.prototype.splice.apply(tmp, arg);
     }
 
     return tmp;
