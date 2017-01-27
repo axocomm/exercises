@@ -3,6 +3,10 @@
 var Commands = {
   $push: function (item) {
     return this.concat(item);
+  },
+
+  $set: function (item) {
+    return item;
   }
 };
 
