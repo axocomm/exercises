@@ -5,10 +5,31 @@ var Commands = {
     return this.concat(item);
   },
 
+  $unshift: function (items) {
+    return items.concat(this);
+  },
+
+  $splice: function (args) {
+    var tmp = clone(this);
+    for (var i in args) {
+      var arg = args[i],
+          start = arg[0],
+          deleteCount = arg[1],
+          item = arg[2];
+      tmp.splice(start, deleteCount, item);
+    }
+
+    return tmp;
+  },
+
   $set: function (item) {
     return item;
   }
 };
+
+function clone(thing) {
+  return JSON.parse(JSON.stringify(thing));
+}
 
 function d(msg) {
   console.log('=== ' + msg);
