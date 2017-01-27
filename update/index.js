@@ -21,6 +21,13 @@ var Commands = {
 
   $set: function (item) {
     return item;
+  },
+
+  $merge: function (obj) {
+    return Object.keys(obj).reduce(function (acc, k) {
+      acc[k] = obj[k];
+      return acc;
+    }, this);
   }
 };
 
