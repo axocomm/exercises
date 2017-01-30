@@ -1,36 +1,34 @@
 'use strict';
 
 function throttlePromises(limit, factories) {
-  var completePromise = function (done) {
+  var resolveThrottled = function (done) {
     var results = [];
     var inProgress = 0;
-    var promise;
+    var idx = 0;
 
-    var tryPromise = function (remain) {
-      // console.log('Try with ' + remain.length + ' and ' + results.length);
-      if (remain.length === 0) {
+    var resolveNext = function () {
+      if (idx >= factories.length && inProgress === 0) {
         done(results);
-      } else {
-        if (inProgress <= limit) {
-          inProgress++;
-          promise = remain[0];
-          promise().then(function (result) {
-            results.push(result);
+      } else if (idx < factories.length && inProgress < limit) {
+        var i = idx++;
+        var promiseFn = factories[i];
+
+        inProgress++;
+        promiseFn()
+          .then(function (result) {
             inProgress--;
-            tryPromise(remain.slice(1));
+            results[i] = result;
+            resolveNext();
           });
 
-          tryPromise(remain);
-        }
+        resolveNext();
       }
     };
 
-    tryPromise(factories);
+    resolveNext();
   };
 
-  return new Promise(function (done) {
-    completePromise(done);
-  });
+  return new Promise(resolveThrottled);
 }
 
 module.exports = throttlePromises;
