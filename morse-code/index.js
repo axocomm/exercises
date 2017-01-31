@@ -40,14 +40,14 @@ function transmitter(options, callback) {
   };
 
   var transmit = function (morse) {
-    var helper = function (remain, curState) {
+    var helper = function (remain, lastState) {
       if (remain.length === 0) {
         options.toggle();
         return callback();
       }
 
       var state = remain[0];
-      if (state !== curState) {
+      if (state !== lastState) {
         options.toggle();
       }
 
