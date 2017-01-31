@@ -6,6 +6,13 @@ function throttlePromises(limit, factories) {
     var inProgress = 0;
     var idx = 0;
 
+    var resolved = function (i) {
+      return function (result) {
+        inProgress--;
+        results[i] = result;
+      };
+    };
+
     var resolveNext = function () {
       if (idx >= factories.length && inProgress === 0) {
         done(results);
@@ -15,11 +22,8 @@ function throttlePromises(limit, factories) {
 
         inProgress++;
         promiseFn()
-          .then(function (result) {
-            inProgress--;
-            results[i] = result;
-            resolveNext();
-          });
+          .then(resolved(i))   // Decrement inProgress and add result
+          .then(resolveNext);
 
         resolveNext();
       }
