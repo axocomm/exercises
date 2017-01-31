@@ -2,8 +2,14 @@
 
 var codes = require('./codes');
 
+var Spaces = {
+  STATE: '0',
+  LETTER: '000',
+  WORD: '0000000'
+};
+
 function transmitter(options, callback) {
-  var getState = function (code) {
+  var getStates = function (code) {
     return code.split('').map(function (d) {
       return d === '.' ? '1' : '111';
     });
@@ -14,14 +20,18 @@ function transmitter(options, callback) {
   };
 
   var toMorse = function (str) {
-    var words = str.split(/  */);
-    return words.map(function (word) {
-      var letters = word.split('');
-      return letters.map(function (l) {
-        var states = getState(getCode(l));
-        return states.join('0');
-      }).join('000');
-    }).join('0000000');
+    return str
+      .split(/  */)
+      .map(function (word) {
+        return word
+          .split('')
+          .map(function (l) {
+            var states = getStates(getCode(l));
+            return states.join(Spaces.STATE);
+          })
+          .join(Spaces.LETTER);
+      })
+      .join(Spaces.WORD);
   };
 
   return toMorse(options.message);
