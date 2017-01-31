@@ -8,10 +8,15 @@ var Spaces = {
   WORD: '0000000'
 };
 
+var States = {
+  DOT: '1',
+  DASH: '111'
+};
+
 function transmitter(options, callback) {
   var getStates = function (code) {
     return code.split('').map(function (d) {
-      return d === '.' ? '1' : '111';
+      return d === '.' ? States.DOT : States.DASH;
     });
   };
 
@@ -34,12 +39,28 @@ function transmitter(options, callback) {
       .join(Spaces.WORD);
   };
 
-  return toMorse(options.message);
-}
+  var transmit = function (morse) {
+    var helper = function (remain, curState) {
+      if (remain.length === 0) {
+        options.toggle();
+        return callback();
+      }
 
-console.log(transmitter({
-  codes: codes,
-  message: 'so so'
-}, null));
+      var state = remain[0];
+      if (state !== curState) {
+        options.toggle();
+      }
+
+      options.timeouter(function () {
+        helper(remain.slice(1), state);
+      }, 1);
+    };
+
+    helper(morse);
+  };
+
+  var states = toMorse(options.message);
+  return transmit(states);
+}
 
 module.exports = transmitter;
