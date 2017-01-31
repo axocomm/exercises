@@ -39,10 +39,6 @@ function clone(thing) {
   return JSON.parse(JSON.stringify(thing));
 }
 
-function d(msg) {
-  console.log('=== ' + msg);
-}
-
 /**
  * Determine if the given object is a state update command.
  *
@@ -67,10 +63,6 @@ function applyUpdate(update, state) {
   var k = Object.keys(update)[0];
   var arg = update[k];
   var commandFn = Commands[k];
-
-  d('State is ' + JSON.stringify(state));
-  d('Update is ' + JSON.stringify(update));
-  d('Arg is ' + JSON.stringify(arg));
 
   if (typeof commandFn === 'undefined') {
     throw("Invalid command '" + k + "'");
@@ -107,9 +99,5 @@ function update(state, updates) {
 
   return helper(state, updates);
 }
-
-var state = [1, 2];
-var updates = {$push: [3]};
-console.log(update(state, updates));
 
 module.exports = update;
